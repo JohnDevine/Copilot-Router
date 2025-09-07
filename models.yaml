@@ -1,0 +1,29 @@
+# @file models.yaml
+# @brief Registry of Ollama models and endpoints.
+# @details Each model entry specifies the Ollama endpoint and mode.
+
+models:
+  qwen3:4b:
+    endpoint: "http://localhost:11434"
+    mode: "chat"
+
+  qwen3:8b:
+    endpoint: "http://localhost:11434"
+    mode: "chat"
+
+  deepseek-coder:6b:
+    endpoint: "http://localhost:11434"
+    mode: "inline"
+
+  yi-coder:9b:
+    endpoint: "http://localhost:11434"
+    mode: "agent"
+
+  deepseek-r1:
+    endpoint: "http://localhost:11434"
+    mode: "agent"
+
+Modes:
+* chat: conversational, multi-turn
+* inline: fast code completions
+* agent: multi-step reasoning and tool orchestration

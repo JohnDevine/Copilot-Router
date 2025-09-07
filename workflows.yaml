@@ -1,0 +1,40 @@
+# @file workflows.yaml
+# @brief Declarative multi-step pipelines.
+# @details Each workflow can consist of multiple steps of type 'model' or 'tool'.
+
+workflows:
+  summarize_and_generate:
+    - type: model
+      model: qwen3:4b
+      action: "Summarize this Markdown document"
+    - type: model
+      model: deepseek-coder:6b
+      action: "Generate C boilerplate based on summary"
+
+  python_refactor_flow:
+    - type: model
+      model: deepseek-coder:6b
+      action: "Refactor Python code for clarity and efficiency"
+
+  platformio_config_explainer:
+    - type: model
+      model: qwen3:4b
+      action: "Explain the board and framework settings in this PlatformIO config"
+
+  multi_agent_architecture:
+    - type: model
+      model: deepseek-r1
+      action: "Plan a modular multi-agent architecture for local AI workflows"
+    - type: model
+      model: yi-coder:9b
+      action: "Generate CLI scaffolding and test harness for the proposed architecture"
+
+  inline_completion_test:
+    - type: model
+      model: deepseek-coder:6b
+      action: "Complete this function inline with proper error handling"
+
+  fallback_chat_flow:
+    - type: model
+      model: qwen3:4b
+      action: "Respond conversationally to general-purpose queries"

@@ -1,0 +1,42 @@
+# @file routing_rules.yaml
+# @brief Rules for selecting models based on file extension and prompt content.
+# @details Each rule matches certain file types and/or prompt keywords.
+
+ routing_rules:
+  - match:
+      prompt_contains: ["use q3"]
+    route_to: "qwen3:8b"
+
+  - match:
+      prompt_contains: ["use q4"]
+    route_to: "qwen3:4b"
+
+  - match:
+      prompt_contains: ["use coder"]
+    route_to: "deepseek-coder:6b"
+
+  - match:
+      prompt_contains: ["use yi"]
+    route_to: "yi-coder:9b"
+
+  - match:
+      prompt_contains: ["use r1"]
+    route_to: "deepseek-r1"
+
+  - match:
+      file_extension: ".md"
+      prompt_contains: ["summarize"]
+    route_to: "qwen3:4b"
+
+  - match:
+      file_extension: ".py"
+      prompt_contains: ["refactor", "async"]
+    route_to: "deepseek-coder:6b"
+
+  - match:
+      file_extension: ".ini"
+      prompt_contains: ["platformio", "framework", "board"]
+    route_to: "qwen3:4b"
+
+  - match: {}
+    route_to: "qwen3:4b"  # fallback

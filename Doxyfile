@@ -1,0 +1,50 @@
+# Doxygen configuration file for Copilot Router project
+
+# Project information
+PROJECT_NAME           = "Copilot Router"
+PROJECT_NUMBER         = 1.0
+OUTPUT_DIRECTORY       = docs
+CREATE_SUBDIRS         = NO
+
+# Input configuration
+INPUT                  = .
+FILE_PATTERNS          = *.py *.yaml *.yml *.md
+RECURSIVE              = YES
+EXCLUDE_PATTERNS       = README.md */__pycache__/*
+MARKDOWN_SUPPORT       = YES
+USE_MDFILE_AS_MAINPAGE = README.md
+
+# Map YAML files to Python for comment parsing
+EXTENSION_MAPPING      = yaml=Python yml=Python
+
+# Build options
+EXTRACT_ALL            = YES
+EXTRACT_PRIVATE        = YES
+EXTRACT_STATIC         = YES
+CASE_SENSE_NAMES       = YES
+
+# Source code extraction
+SOURCE_BROWSER         = YES
+INLINE_SOURCES         = YES
+STRIP_CODE_COMMENTS    = NO
+
+# HTML output
+GENERATE_HTML          = YES
+HTML_OUTPUT            = html
+HTML_FILE_EXTENSION    = .html
+GENERATE_TREEVIEW      = YES
+DISABLE_INDEX          = NO
+FULL_PATH_NAMES        = NO
+
+# LaTeX output (disabled)
+GENERATE_LATEX         = NO
+
+# Diagrams (optional: requires Graphviz)
+HAVE_DOT               = NO
+DOT_GRAPH_MAX_NODES    = 50
+
+# Other options
+QUIET                  = NO
+WARNINGS               = YES
+WARN_IF_UNDOCUMENTED   = NO
+WARN_IF_DOC_ERROR      = YES
