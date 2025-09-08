@@ -1,0 +1,9 @@
+{
+    "editor.accessibilitySupport": "on",
+    "github.copilot.nextEditSuggestions.enabled": true,
+    "continue.enableConsole": true,
+    "editor.wordWrap": "on",
+    "github.copilot.enable": {
+        "markdown": true
+    }
+}

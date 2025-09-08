@@ -4,7 +4,15 @@
 """
 
 import httpx
-from models import MODELS
+import yaml
+import os
+
+# Load MODELS from models.yaml
+MODELS = {}
+models_yaml_path = os.path.join(os.path.dirname(__file__), 'models.yaml')
+with open(models_yaml_path, 'r') as f:
+    data = yaml.safe_load(f)
+    MODELS = data.get('models', {})
 from memory import set_memory
 
 

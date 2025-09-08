@@ -5,38 +5,38 @@
  routing_rules:
   - match:
       prompt_contains: ["use q3"]
-    route_to: "qwen3:8b"
+    route_to: "ollama.com/library/qwen3:8b-q4_K_M"
 
   - match:
       prompt_contains: ["use q4"]
-    route_to: "qwen3:4b"
+    route_to: "ollama.com/library/qwen3:4b-q4_K_M"
 
   - match:
       prompt_contains: ["use coder"]
-    route_to: "deepseek-coder:6b"
+    route_to: "ollama.com/library/deepseek-coder:latest"
 
   - match:
       prompt_contains: ["use yi"]
-    route_to: "yi-coder:9b"
+    route_to: "ollama.com/library/yi-coder:9b"
 
   - match:
       prompt_contains: ["use r1"]
-    route_to: "deepseek-r1"
+    route_to: "ollama.com/library/deepseek-r1:latest"
 
   - match:
       file_extension: ".md"
       prompt_contains: ["summarize"]
-    route_to: "qwen3:4b"
+    route_to: "ollama.com/library/qwen3:4b-q4_K_M"
 
   - match:
       file_extension: ".py"
       prompt_contains: ["refactor", "async"]
-    route_to: "deepseek-coder:6b"
+    route_to: "ollama.com/library/deepseek-coder:latest"
 
   - match:
       file_extension: ".ini"
       prompt_contains: ["platformio", "framework", "board"]
-    route_to: "qwen3:4b"
+    route_to: "ollama.com/library/qwen3:4b-q4_K_M"
 
   - match: {}
-    route_to: "qwen3:4b"  # fallback
+    route_to: "ollama.com/library/qwen3:4b-q4_K_M"  # fallback

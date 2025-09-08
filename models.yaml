@@ -3,27 +3,27 @@
 # @details Each model entry specifies the Ollama endpoint and mode.
 
 models:
-  qwen3:4b:
+  ollama.com/library/qwen3:4b-q4_K_M:
     endpoint: "http://localhost:11434"
     mode: "chat"
 
-  qwen3:8b:
+  ollama.com/library/qwen3:8b-q4_K_M:
     endpoint: "http://localhost:11434"
     mode: "chat"
 
-  deepseek-coder:6b:
+  ollama.com/library/deepseek-coder:latest:
     endpoint: "http://localhost:11434"
     mode: "inline"
 
-  yi-coder:9b:
+  ollama.com/library/yi-coder:9b:
     endpoint: "http://localhost:11434"
     mode: "agent"
 
-  deepseek-r1:
+  ollama.com/library/deepseek-r1:latest:
     endpoint: "http://localhost:11434"
     mode: "agent"
 
-Modes:
-* chat: conversational, multi-turn
-* inline: fast code completions
-* agent: multi-step reasoning and tool orchestration
+# Modes:
+# chat: conversational, multi-turn
+# inline: fast code completions
+# agent: multi-step reasoning and tool orchestration

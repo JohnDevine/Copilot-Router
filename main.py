@@ -12,21 +12,31 @@ from fastapi import FastAPI, Request
 import httpx
 import time
 import yaml
+import logging
 from memory import get_memory, set_memory
 from benchmark import log_benchmark
 from tools import execute_tool_chain
+
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+)
+logger = logging.getLogger("copilot-router")
 
 app = FastAPI()
 
 # Load configuration files
 with open("models.yaml") as f:
     MODELS = yaml.safe_load(f)["models"]
+    logger.info(f"Loaded {len(MODELS)} models from models.yaml")
 
 with open("routing_rules.yaml") as f:
     ROUTING = yaml.safe_load(f)["routing_rules"]
+    logger.info(f"Loaded {len(ROUTING)} routing rules from routing_rules.yaml")
 
 with open("workflows.yaml") as f:
     WORKFLOWS = yaml.safe_load(f)["workflows"]
+    logger.info(f"Loaded {len(WORKFLOWS)} workflows from workflows.yaml")
 
 
 def select_model(file_path: str, prompt: str) -> str:
@@ -37,16 +47,31 @@ def select_model(file_path: str, prompt: str) -> str:
     @param prompt User's input prompt
     @return Name of the selected model
     """
-    ext = file_path.split('.')[-1].lower()
-    prompt = prompt.lower()
+    ext = file_path.split(".")[-1].lower()
+    prompt_lower = prompt.lower()
 
-    for rule in ROUTING:
+    logger.info(
+        f"🔍 Routing request: file='{file_path}' (ext: {ext}), prompt='{prompt[:50]}...'"
+    )
+
+    for i, rule in enumerate(ROUTING):
         exts = rule["match"].get("file_extension", [])
         kws = rule["match"].get("prompt_contains", [])
-        if (not exts or ext in exts) and (not kws or any(k in prompt for k in kws)):
-            return rule["route_to"]
 
-    return "qwen3:4b"
+        ext_match = not exts or ext in exts
+        kw_match = not kws or any(k in prompt_lower for k in kws)
+
+        if ext_match and kw_match:
+            selected_model = rule["route_to"]
+            logger.info(f"✅ Rule {i+1} matched! Routing to: {selected_model}")
+            if kws:
+                matched_keywords = [k for k in kws if k in prompt_lower]
+                logger.info(f"   📝 Matched keywords: {matched_keywords}")
+            return selected_model
+
+    default_model = "ollama.com/library/qwen3:4b-q4_K_M"
+    logger.info(f"🔄 No rules matched, using fallback: {default_model}")
+    return default_model
 
 
 @app.post("/v1/chat/completions")
@@ -63,16 +88,44 @@ async def route_to_model(request: Request):
     model = select_model(file_path, prompt)
     model_cfg = MODELS[model]
 
+    logger.info(f"🚀 Forwarding to {model} at {model_cfg['endpoint']}")
+
     start = time.time()
     async with httpx.AsyncClient() as client:
         response = await client.post(
             f"{model_cfg['endpoint']}/v1/chat/completions",
-            json={**data, "model": model}
+            json={**data, "model": model},
         )
     end = time.time()
 
+    logger.info(f"⚡ Response received in {end-start:.2f}s")
     log_benchmark(model, prompt, start, end)
     return response.json()
+
+
+@app.get("/v1/models")
+async def list_models():
+    """
+    Lists all available models in OpenAI API format.
+
+    @return JSON response with list of available models
+    """
+    models_list = []
+    for model_name, model_config in MODELS.items():
+        models_list.append(
+            {
+                "id": model_name,
+                "object": "model",
+                "created": int(time.time()),
+                "owned_by": "ollama",
+                "permission": [],
+                "root": model_name,
+                "parent": None,
+                "mode": model_config.get("mode", "chat"),
+            }
+        )
+
+    return {"object": "list", "data": models_list}
 
 
 @app.post("/v1/workflows/{workflow_name}")

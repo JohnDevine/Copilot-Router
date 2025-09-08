@@ -1,0 +1,207 @@
+To use your custom router (with models from models.yaml) in VS Code, you need to make it accessible as an API endpoint that a VS Code extension (like GitHub Copilot, CodeGPT, Continue, or similar) can connect to as a custom model provider.
+
+Here’s what you need to do:
+
+Expose an OpenAI-compatible API:
+Most VS Code AI extensions expect an OpenAI-compatible API (e.g., /v1/chat/completions). Your FastAPI/Uvicorn app should provide this endpoint and accept requests in the same format as OpenAI.
+
+Start your server:
+Run your FastAPI app (e.g., with uvicorn main:app --reload). Make sure it’s accessible at http://localhost:8000 or another port.
+
+Configure the VS Code extension:
+
+For extensions like Continue, CodeGPT, or others, go to their settings in VS Code.
+Look for a setting like “Custom Model Provider,” “Custom API Endpoint,” or “OpenAI API Base URL.”
+Set the API base URL to your running server, e.g., http://localhost:8000/v1.
+If needed, set the API key to a dummy value (if your server does not require authentication).
+Reload VS Code:
+After configuring, reload VS Code. Your models should now appear in the dropdown if your API is compatible.
+
+Note:
+If your FastAPI app does not yet provide an OpenAI-compatible /v1/chat/completions endpoint, you will need to implement it. Would you like help adding this endpoint to your FastAPI app
+
+========
+
+Your FastAPI app already exposes an OpenAI-compatible /v1/chat/completions endpoint that routes requests to the correct model based on your YAML config. Here’s a detailed breakdown of what’s happening and what you need to do in VS Code:
+
+1. How the Router Works
+Endpoint:
+/v1/chat/completions (POST)
+This endpoint receives chat requests in the OpenAI format.
+
+Routing:
+The function select_model uses routing_rules.yaml and the prompt/file to pick a model from models.yaml.
+
+Proxy:
+The router forwards the request to the correct model endpoint (e.g., an Ollama server) and returns the response.
+
+2. How to Use This in VS Code
+A. Start Your Router
+Make sure your FastAPI app is running:
+
+
+uvicorn main:app --reload
+It should be accessible at http://localhost:8000.
+
+B. Configure Your VS Code Extension
+For Continue, CodeGPT, or similar extensions:
+
+Open VS Code settings.
+Search for “OpenAI API Base URL” or “Custom Model Provider.”
+Set the base URL to:
+
+http://localhost:8000/v1
+Set the API key to any dummy value if required (your router does not check it).
+Reload VS Code.
+Your router should now appear as a selectable model provider. The actual model names in the dropdown depend on the extension’s UI and how it fetches available models (some may require a specific endpoint for listing models).
+
+3. If Models Don’t Appear in the Dropdown
+Some extensions only show models if the /v1/models endpoint is implemented (OpenAI spec).
+Your current router does not implement /v1/models.
+Would you like me to add a /v1/models endpoint to your FastAPI app so that VS Code extensions can list your available models? This will make your models appear in the dropdown. 4. Set the API key to any dummy value if required (your router does not check it).
+Reload VS Code.
+Your router should now appear as a selectable model provider. The actual model names in the dropdown depend on the extension’s UI and how it fetches available models (some may require a specific endpoint for listing models).
+3. If Models Don’t Appear in the Dropdown
+Some extensions only show models if the /v1/models endpoint is implemented (OpenAI spec).
+Your current router does not implement /v1/models.
+Would you like me to add a /v1/models endpoint to your FastAPI app so that VS Code extensions can list your available models? This will make your models appear in the dropdown
+
+=======
+
+Adding Your Router to GitHub Copilot
+Method 1: VS Code Settings UI
+Open VS Code Settings (Cmd+,)
+Search for: github copilot
+Look for settings like:
+"GitHub Copilot: Chat: Custom Models"
+"GitHub Copilot: Custom Endpoint"
+"GitHub Copilot: Model Selection"
+Add your router endpoint: http://localhost:8000/v1
+Method 2: Settings JSON (More Direct)
+Open Command Palette (Cmd+Shift+P)
+Type: "Preferences: Open Settings (JSON)"
+Add these settings:
+
+{  "github.copilot.chat.customEndpoint": "http://localhost:8000/v1",  "github.copilot.chat.customModels": [    {      "name": "Smart Router",      "endpoint": "http://localhost:8000/v1",      "model": "auto"    }  ],  "github.copilot.advanced": {    "debug.overrideEngine": "http://localhost:8000/v1"  }}
+Method 3: Copilot Configuration File
+Some versions use a separate config file:
+
+Create/edit: ~/.config/github-copilot/hosts.json
+Add your router:
+
+{  "localhost:8000": {    "oauth_token": "dummy",    "user": "local",    "api_url": "http://localhost:8000/v1"  }}
+Method 4: Environment Variable
+Set an environment variable that Copilot can use:
+
+
+export GITHUB_COPILOT_CHAT_ENDPOINT="http://localhost:8000/v1"
+Benefits of Using Your Router with Copilot:
+Smart model selection based on file type and context
+Performance monitoring via your benchmark logging
+Workflow support for complex multi-step tasks
+Custom routing rules you've configured
+Which method would you like to try first? The settings JSON approach (Method 2) is usually the most reliable.
+=======
+Step-by-Step: Adding Your Router to GitHub Copilot via Settings JSON
+Step 1: Open VS Code Settings JSON
+Copilot will execute the Open Settings JSON command.
+
+Settings.json:
+{
+    "editor.accessibilitySupport": "on",
+    "github.copilot.nextEditSuggestions.enabled": true,
+    "continue.enableConsole": true,
+    "editor.wordWrap": "on",
+    "github.copilot.enable": {
+        "markdown": true
+    }
+}
+====
+Step 2: Understanding the Configuration
+Now I'll explain what each setting does and why we need it:
+
+1. github.copilot.chat.customEndpoint
+
+Purpose: Tells Copilot Chat to use your router instead of OpenAI's API
+Why: This redirects all chat requests to your intelligent router
+Value: "http://localhost:8000/v1"
+2. github.copilot.chat.customModels
+
+Purpose: Defines available models that appear in the Copilot Chat dropdown
+Why: Makes your router's models selectable in the UI
+Value: Array of model configurations
+3. github.copilot.advanced.debug.overrideEngine
+
+Purpose: Advanced setting that overrides the default completion engine
+Why: Ensures inline code completions also go through your router
+Value: Your router endpoint
+Step 3: Add the Configuration
+You should add this JSON configuration to your settings.json file:
+
+
+{  "github.copilot.chat.customEndpoint": "http://localhost:8000/v1",  "github.copilot.chat.customModels": [    {      "name": "Smart Router (Auto-Select)",      "endpoint": "http://localhost:8000/v1",      "model": "auto",      "description": "Automatically selects the best model based on context"    },    {      "name": "DeepSeek Coder",      "endpoint": "http://localhost:8000/v1",       "model": "ollama.com/library/deepseek-coder:latest",      "description": "Specialized for code optimization and generation"    },    {      "name": "Qwen3 4B (Fast)",      "endpoint": "http://localhost:8000/v1",      "model": "ollama.com/library/qwen3:4b-q4_K_M",      "description": "Fast general-purpose model"    },    {      "name": "Yi Coder 9B",      "endpoint": "http://localhost:8000/v1",      "model": "ollama.com/library/yi-coder:9b",       "description": "Advanced coding assistant"    }  ],  "github.copilot.advanced": {    "debug.overrideEngine": "http://localhost:8000/v1"  }}
+Step 4: Why This Works
+Routing Intelligence: When you select "Smart Router (Auto-Select)", your router will:
+
+Analyze the file extension (.py, .js, etc.)
+Check for prompt keywords ("use coder", "refactor", etc.)
+Apply your routing rules from routing_rules.yaml
+Select the optimal model automatically
+Model Choice: You can also manually select specific models like "DeepSeek Coder" for coding tasks or "Qwen3 4B" for faster responses.
+
+Fallback: If automatic routing fails, it falls back to your default model (qwen3:4b-q4_K_M).
+
+Step 5: Restart VS Code
+After saving the settings, restart VS Code to ensure Copilot picks up the new configuration.
+
+Step 6: Test the Integration
+Open Copilot Chat (Cmd+Shift+I or click the chat icon)
+Check the model dropdown - you should see your custom models
+Select "Smart Router (Auto-Select)"
+Ask a coding question - it should route through your system
+The key advantage: Your router adds intelligence that GitHub Copilot doesn't have natively - automatic model selection based on context, performance monitoring, and custom workflows.
+
+Would you like me to help you add this configuration to your VS Code settings?
+======
+Perfect! I'll help you add this configuration to your VS Code settings. Let me open your settings.json file and add the Copilot router configuration.
+
+Copilot will execute the Open Settings JSON command.
+
+Continue
+========
+Perfect! I'll help you add this configuration to your VS Code settings. Let me open your settings.json file and add the Copilot router configuration.
+
+Running command `Open Settings JSON`
+
+Now I'll add the GitHub Copilot configuration to integrate with your router. This configuration will:
+
+Redirect Copilot Chat to use your router endpoint
+Add your models to the Copilot dropdown menu
+Enable intelligent routing based on your rules
+Here's what I'm adding to your settings:
+
+
+{  "github.copilot.chat.customEndpoint": "http://localhost:8000/v1",  "github.copilot.chat.customModels": [    {      "name": "Smart Router (Auto-Select)",      "endpoint": "http://localhost:8000/v1",      "model": "auto",      "description": "Automatically selects the best model based on context"    },    {      "name": "DeepSeek Coder",      "endpoint": "http://localhost:8000/v1",       "model": "ollama.com/library/deepseek-coder:latest",      "description": "Specialized for code optimization and generation"    },    {      "name": "Qwen3 4B (Fast)",      "endpoint": "http://localhost:8000/v1",      "model": "ollama.com/library/qwen3:4b-q4_K_M",      "description": "Fast general-purpose model"    },    {      "name": "Qwen3 8B (Powerful)",      "endpoint": "http://localhost:8000/v1",      "model": "ollama.com/library/qwen3:8b-q4_K_M",      "description": "More capable general-purpose model"    },    {      "name": "Yi Coder 9B",      "endpoint": "http://localhost:8000/v1",      "model": "ollama.com/library/yi-coder:9b",       "description": "Advanced coding assistant"    },    {      "name": "DeepSeek R1",      "endpoint": "http://localhost:8000/v1",      "model": "ollama.com/library/deepseek-r1:latest",      "description": "Advanced reasoning and problem-solving"    }  ],  "github.copilot.advanced": {    "debug.overrideEngine": "http://localhost:8000/v1"  }}
+What this configuration does:
+
+customEndpoint: Routes all Copilot Chat requests through your intelligent router
+customModels: Adds 6 options to your Copilot dropdown:
+Smart Router: Uses your routing rules for automatic model selection
+Individual models: Direct access to specific models when you want control
+advanced.debug.overrideEngine: Ensures inline completions also use your router
+Benefits you'll get:
+
+✅ Smart model selection - Router picks the best model based on file type and prompt
+✅ Performance monitoring - Your benchmark logging tracks all requests
+✅ Custom workflows - Access to your multi-step workflow system
+✅ Local models - No data sent to external APIs
+✅ Fallback handling - Graceful degradation if a model is unavailable
+
+After adding this configuration:
+
+Restart VS Code to apply the settings
+Open Copilot Chat (Cmd+Shift+I)
+Check the model dropdown - you should see your custom options
+Test with "Smart Router (Auto-Select)" for intelligent routing
+Your Copilot Router is now fully integrated with GitHub Copilot! 🎉
+

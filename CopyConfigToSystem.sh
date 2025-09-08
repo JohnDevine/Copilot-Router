@@ -1,0 +1,1 @@
+cp "/Users/johndevine/.vscode/Copilot-Router/default-settings.json" "/Users/johndevine/Library/Application Support/Code/User/settings.json"

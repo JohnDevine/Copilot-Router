@@ -1,0 +1,53 @@
+{
+  "models": [
+    {
+      "title": "🧠 Smart Router (Auto-Select)",
+      "provider": "openai",
+      "model": "auto",
+      "apiBase": "http://localhost:8000/v1",
+      "apiKey": "dummy"
+    },
+    {
+      "title": "💻 DeepSeek Coder",
+      "provider": "openai",
+      "model": "ollama.com/library/deepseek-coder:latest",
+      "apiBase": "http://localhost:8000/v1",
+      "apiKey": "dummy"
+    },
+    {
+      "title": "⚡ Qwen3 4B (Fast)",
+      "provider": "openai",
+      "model": "ollama.com/library/qwen3:4b-q4_K_M",
+      "apiBase": "http://localhost:8000/v1",
+      "apiKey": "dummy"
+    },
+    {
+      "title": "🚀 Qwen3 8B (Powerful)",
+      "provider": "openai",
+      "model": "ollama.com/library/qwen3:8b-q4_K_M",
+      "apiBase": "http://localhost:8000/v1",
+      "apiKey": "dummy"
+    },
+    {
+      "title": "🎯 Yi Coder 9B",
+      "provider": "openai",
+      "model": "ollama.com/library/yi-coder:9b",
+      "apiBase": "http://localhost:8000/v1",
+      "apiKey": "dummy"
+    },
+    {
+      "title": "🧮 DeepSeek R1 (Reasoning)",
+      "provider": "openai",
+      "model": "ollama.com/library/deepseek-r1:latest",
+      "apiBase": "http://localhost:8000/v1",
+      "apiKey": "dummy"
+    }
+  ],
+  "tabAutocompleteModel": {
+    "title": "Smart Router Autocomplete",
+    "provider": "openai",
+    "model": "ollama.com/library/qwen3:4b-q4_K_M",
+    "apiBase": "http://localhost:8000/v1",
+    "apiKey": "dummy"
+  }
+}
