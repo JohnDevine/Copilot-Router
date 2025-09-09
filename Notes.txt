@@ -1,3 +1,107 @@
+Test commands to verify routing:
+use coder - write a c language function that inputs two numbers and outputs the answer.
+
+"use coder - write a function" → DeepSeek Coder
+"use q3 - explain this code" → Qwen3 8B
+"help me debug this" → Qwen3 4B (default)
+
+======
+Copilot Chat dropdown should show your custom models:
+
+Smart Router (Auto-Select)
+Qwen3 8B (use q3)
+DeepSeek Coder (use coder)
+Yi Coder 9B (use yi)
+Router logs should show incoming requests when you use Copilot Chat
+
+Test commands to verify routing:
+
+"use coder - write a function" → DeepSeek Coder
+"use q3 - explain this code" → Qwen3 8B
+"help me debug this" → Qwen3 4B (default)
+🔍 Troubleshooting After Restart:
+If you don't see the custom models or get errors:
+
+Check both services are running:
+
+
+lsof -i :11434 -i :11435 | grep LISTEN
+Test router directly:
+
+
+curl -s http://localhost:11434/v1/models | head -5
+Check VS Code Developer Console (Help → Toggle Developer Tools) for any connection errors
+
+Good luck with the test! The router logs will show you exactly what's happening when Copilot makes requests. 🚀
+======
+just to confirm, if the router running on port 11434 is not visible the selection will fall back to the normal dropdown menu selection. It also requires ollama to be running on port 11435
+
+lsof -i :11434 -i :11435 | grep LISTEN
+========
+What Just Happened:
+Updated VS Code settings to point Copilot to your router (port 11434)
+Added custom models to the Copilot dropdown
+Created integration guide for easy reference
+How to Switch Between Router and Claude:
+Router Mode (Current):
+Copilot Chat uses your intelligent router
+Smart keyword-based routing
+Local models with performance monitoring
+Claude Mode (When Needed):
+
+# Quick switch - stop router temporarilypkill -f "uvicorn.*11434"
+Copilot will fallback to Claude when router is unavailable
+
+Permanent Switch Back:
+Comment out the endpoint lines in settings.json
+
+Test It Now:
+Restart VS Code to apply settings
+Open Copilot Chat (Cmd+Shift+I)
+Try: "use coder - write a Python function"
+Check router logs to see the intelligent routing in action!
+You now have the best of both worlds - intelligent local routing with full Copilot integration, and easy access back to Claude when needed! 🚀
+=======
+OLLAMA_HOST=0.0.0.0:11435
+ ollama serve
+======
+Now I understand the Copilot Router program! This is a FastAPI-based routing service that intelligently directs chat requests to different AI models based on configurable rules. Here's how it works:
+
+Core Functionality
+The Copilot Router acts as a smart proxy that:
+
+Receives chat requests via /v1/chat/completions endpoint
+Analyzes the request (file type, prompt content)
+Routes to the appropriate model based on predefined rules
+Forwards the response back to the client
+How Routing to Qwen Works
+The routing system uses two key files:
+
+Routing Rules (routing_rules.yaml)
+Contains rules that match prompts to specific models
+For Qwen models specifically:
+"use q3" → routes to qwen3:8b-q4_K_M
+"use q4" → routes to qwen3:4b-q4_K_M
+Default fallback → qwen3:4b-q4_K_M if no rules match
+Model Configuration (models.yaml)
+Maps model names to their Ollama endpoints
+Both Qwen models point to http://localhost:11434
+Smart Selection Process
+The select_model() function:
+
+Extracts file extension and converts prompt to lowercase
+Iterates through routing rules to find matches
+Checks both file extension AND prompt keywords
+Returns the first matching model
+Falls back to Qwen 4B if no rules match
+Key Features
+OpenAI-compatible API (/v1/models, /v1/chat/completions)
+Performance monitoring with benchmark logging
+Memory management for context persistence
+Workflow execution for multi-step operations
+Detailed logging for debugging and monitoring
+When you confirmed "that works and routes to qwen" - the system successfully matched your request to one of the Qwen models and forwarded it to the local Ollama instance running on port 11434!
+========
 To use your custom router (with models from models.yaml) in VS Code, you need to make it accessible as an API endpoint that a VS Code extension (like GitHub Copilot, CodeGPT, Continue, or similar) can connect to as a custom model provider.
 
 Here’s what you need to do:

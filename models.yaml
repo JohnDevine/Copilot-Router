@@ -3,25 +3,60 @@
 # @details Each model entry specifies the Ollama endpoint and mode.
 
 models:
-  ollama.com/library/qwen3:4b-q4_K_M:
-    endpoint: "http://localhost:11434"
-    mode: "chat"
-
-  ollama.com/library/qwen3:8b-q4_K_M:
-    endpoint: "http://localhost:11434"
-    mode: "chat"
-
-  ollama.com/library/deepseek-coder:latest:
-    endpoint: "http://localhost:11434"
-    mode: "inline"
-
   ollama.com/library/yi-coder:9b:
-    endpoint: "http://localhost:11434"
+    endpoint: "http://localhost:11435"
     mode: "agent"
+    size: 5037007607
+    digest: "39c63e7675d7a5c44f71c142c269ab95951170a80971c946e216d3ef575791e6"
+    modified_at: "2025-09-06T18:26:00.239555407+07:00"
+    family: "llama"
+    families: ["llama"]
+    parameter_size: "8.8B"
+    quantization_level: "Q4_0"
 
   ollama.com/library/deepseek-r1:latest:
-    endpoint: "http://localhost:11434"
+    endpoint: "http://localhost:11435"
     mode: "agent"
+    size: 5225376047
+    digest: "6995872bfe4c521a67b32da386cd21d5c6e819b6e0d62f79f64ec83be99f5763"
+    modified_at: "2025-09-06T17:01:08.321297543+07:00"
+    family: "qwen3"
+    families: ["qwen3"]
+    parameter_size: "8.2B"
+    quantization_level: "Q4_K_M"
+
+  ollama.com/library/deepseek-coder:latest:
+    endpoint: "http://localhost:11435"
+    mode: "inline"
+    size: 776080839
+    digest: "3ddd2d3fc8d2b5fe039d18f859271132fd9c7960ef0be1864984442dc2a915d3"
+    modified_at: "2025-09-06T15:46:52.824711983+07:00"
+    family: "llama"
+    families: ["llama"]
+    parameter_size: "1B"
+    quantization_level: "Q4_0"
+
+  ollama.com/library/qwen3:4b-q4_K_M:
+    endpoint: "http://localhost:11435"
+    mode: "chat"
+    size: 2620788260
+    digest: "2bfd38a7daaf4b1037efe517ccb73d1a3bbd4822cf89f1a82be1569050a114e0"
+    modified_at: "2025-09-06T15:45:00.428313429+07:00"
+    family: "qwen3"
+    families: ["qwen3"]
+    parameter_size: "4.0B"
+    quantization_level: "Q4_K_M"
+
+  ollama.com/library/qwen3:8b-q4_K_M:
+    endpoint: "http://localhost:11435"
+    mode: "chat"
+    size: 5225388164
+    digest: "500a1f067a9f782620b40bee6f7b0c89e17ae61f686b92c24933e4ca4b2b8b41"
+    modified_at: "2025-09-06T15:17:17.6426831+07:00"
+    family: "qwen3"
+    families: ["qwen3"]
+    parameter_size: "8.2B"
+    quantization_level: "Q4_K_M"
 
 # Modes:
 # chat: conversational, multi-turn

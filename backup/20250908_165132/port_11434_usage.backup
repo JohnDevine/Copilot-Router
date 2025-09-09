@@ -1,0 +1,2 @@
+COMMAND PID       USER   FD   TYPE             DEVICE SIZE/OFF NODE NAME
+ollama  852 johndevine    3u  IPv4 0x1e74441a8ba7a131      0t0  TCP localhost:11434 (LISTEN)

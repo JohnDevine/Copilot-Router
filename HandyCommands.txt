@@ -1,0 +1,5 @@
+lsof -i :11434 -i :11435
+curl http://localhost:11435/v1/models
+
+ollama normally is on 11434
+We put the router on 11434 and moved ollama to 11435
